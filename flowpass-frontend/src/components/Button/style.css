@@ -31,3 +31,11 @@
 .btn-short{
     width: 220px;
 }
+
+.btn:hover{
+    filter:brightness(0.90);
+}
+
+.btn:active{
+    transform:scale(0.90)
+}
