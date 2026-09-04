@@ -1,0 +1,15 @@
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 70px 5% 0px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.logo-text{
+    font-family: var(--font-primary);
+    color: var(--text-primary);
+    font-size: var(--font-headline-h3-size);
+}
