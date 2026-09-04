@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased; 
+}
+
 :root {
   /* COLORS */
   --alert-success: #34A525;
