@@ -1,42 +1,37 @@
-import { Link, NavLink } from 'react-router-dom';
-import Button from '../../common/Button/Button.jsx';
 import './Header.css';
 
-export default function Header() {
+/**
+ * Header simplificado do FLOWPASS (Stitch Design System)
+ * @param {Object} props
+ * @param {function} props.onOpenNewPassModal - Callback para abrir o modal de novo pedido
+ */
+export default function Header({ onOpenNewPassModal }) {
   return (
-    <header className="header">
-      <div className="container header-container">
-        <Link to="/" className="header-logo" aria-label="Flowpass Home">
-          <span className="header-logo-icon">F</span>
-          <span>Flowpass</span>
-        </Link>
+    <header className="stitch-header">
+      <div className="dashboard-container stitch-header-inner">
+        <div className="stitch-logo" aria-label="FLOWPASS">
+          <span className="stitch-logo-text">
+            FLOW<span className="stitch-logo-accent">PASS</span>
+          </span>
+        </div>
 
-        <nav className="header-nav" aria-label="Navegação Principal">
-          <ul className="header-nav-list">
-            <li>
-              <NavLink 
-                to="/" 
-                className={({ isActive }) => `header-nav-link ${isActive ? 'active' : ''}`}
-              >
-                Início
-              </NavLink>
-            </li>
-            <li>
-              <a href="#features" className="header-nav-link">Recursos</a>
-            </li>
-            <li>
-              <a href="#about" className="header-nav-link">Sobre</a>
-            </li>
-          </ul>
-        </nav>
+        <div className="stitch-header-actions">
+          <button
+            className="stitch-btn-new-pass"
+            type="button"
+            onClick={onOpenNewPassModal}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+              add
+            </span>
+            <span>+ Novo Pedido</span>
+          </button>
 
-        <div className="header-actions">
-          <Button variant="secondary" size="small">
-            Entrar
-          </Button>
-          <Button variant="primary" size="small">
-            Começar Agora
-          </Button>
+          <div className="stitch-user-avatar" title="Operador Logado">
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+              person
+            </span>
+          </div>
         </div>
       </div>
     </header>
