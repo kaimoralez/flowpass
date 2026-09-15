@@ -2,7 +2,7 @@
   width: 100%;
   background-color: var(--color-surface);
   border-top: 1px solid var(--color-border);
-  padding: var(--space-lg) 0;
+  padding: var(--space-md) 0;
   margin-top: auto;
 }
 
@@ -11,47 +11,40 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 640px) {
   .stitch-footer-inner {
     flex-direction: row;
   }
 }
 
-.stitch-footer-info {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  color: var(--color-on-surface-variant);
+.stitch-footer-school {
+  font-family: var(--font-family-base);
   font-size: var(--font-size-md);
-  flex-wrap: wrap;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-on-surface);
+  letter-spacing: 0.01em;
 }
 
-.stitch-footer-tag {
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
-  color: var(--color-primary);
-  background-color: var(--color-surface-high);
-  padding: 2px var(--space-xs);
-  border-radius: var(--radius-xs);
-}
-
-.stitch-footer-status {
-  display: flex;
+.stitch-footer-credit {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   color: var(--color-on-surface-variant);
-  font-size: var(--font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
-.stitch-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-full);
-  background-color: var(--color-primary);
-  box-shadow: 0 0 8px rgba(110, 223, 89, 0.6);
+.stitch-footer-credit:hover {
+  color: var(--color-primary);
+}
+
+.stitch-github-icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
 }

@@ -1,0 +1,303 @@
+.pass-card {
+  position: relative;
+  background-color: var(--color-surface-low);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.pass-card:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-hover);
+}
+
+/* Left Status Stripe */
+.pass-card-stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-surface-highest);
+}
+
+.pass-card-stripe.normal {
+  background-color: var(--color-primary);
+}
+
+.pass-card-stripe.warning {
+  background-color: var(--color-tertiary);
+}
+
+.pass-card-stripe.overdue {
+  width: 6px;
+  background-color: var(--color-error-solid);
+}
+
+.pass-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.pass-card-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pass-card-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+}
+
+.pass-card-avatar.aluno {
+  color: #6edf59;
+}
+
+.pass-card-avatar.aluna {
+  color: #b4c5ff;
+}
+
+.pass-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pass-card-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.pass-card-name {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-on-surface);
+}
+
+.pass-card-gender-badge {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-high);
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pass-card-priority-badge {
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-error-container);
+  color: var(--color-error);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+.pass-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-on-surface-variant);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  flex-wrap: wrap;
+}
+
+.pass-card-room-code {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+}
+
+.pass-card-teacher {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.pass-card-destination-tag {
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Timeline & Actions Bar */
+.pass-card-timeline-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  background-color: rgba(32, 32, 31, 0.4);
+  padding: 8px var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(43, 43, 43, 0.5);
+}
+
+@media (min-width: 640px) {
+  .pass-card-timeline-bar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.pass-card-timer-block {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.pass-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.pass-timer-pill.normal {
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.pass-timer-pill.queue {
+  background-color: var(--color-surface);
+  color: var(--color-tertiary);
+}
+
+.pass-timer-pill.warning {
+  background-color: var(--color-surface);
+  color: var(--color-tertiary);
+}
+
+.pass-timer-pill.overdue {
+  background-color: var(--color-error-container);
+  color: var(--color-error);
+}
+
+.pass-card-time-label {
+  color: var(--color-on-surface-variant);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-family-base);
+}
+
+/* Action Buttons */
+.pass-card-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.pass-btn-primary {
+  height: 36px;
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-md);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.pass-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.pass-btn-primary:active:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.pass-btn-primary.blocked {
+  background-color: var(--color-surface-high);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  border: 1px dashed var(--color-border);
+}
+
+.pass-btn-icon-danger {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface-variant);
+  border: 1px solid var(--color-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pass-btn-icon-danger:hover {
+  background-color: var(--color-error-container);
+  color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.pass-btn-inspector {
+  height: 36px;
+  padding: 0 var(--space-sm);
+  border-radius: var(--radius-md);
+  background-color: var(--color-error-container);
+  color: var(--color-error);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  transition: all var(--transition-fast);
+}
+
+.pass-btn-inspector:hover {
+  filter: brightness(1.2);
+}
+
+.pass-rule-warning-note {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xs);
+  color: var(--color-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}

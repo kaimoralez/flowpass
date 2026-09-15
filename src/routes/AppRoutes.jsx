@@ -1,14 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
-import MainLayout from '../components/layout/MainLayout/MainLayout.jsx';
-import Home from '../pages/Home/Home.jsx';
+import AccessPage from '../pages/Access/AccessPage.jsx';
+import DashboardPage from '../pages/Dashboard/DashboardPage.jsx';
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-        {/* Futuras rotas serão adicionadas aqui mediante solicitação */}
-      </Route>
+      {/* Tela Inicial: Tela de Acesso Centralizada (Stitch) */}
+      <Route path="/" element={<AccessPage />} />
+
+      {/* Painel Principal: Dashboard de Circulação em Tempo Real */}
+      <Route path="/dashboard" element={<DashboardPage />} />
     </Routes>
   );
 }
