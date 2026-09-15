@@ -6,7 +6,9 @@
   padding: var(--space-md);
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  justify-content: space-between;
+  min-height: 146px;
+  box-sizing: border-box;
   overflow: hidden;
   transition: all var(--transition-normal);
 }
@@ -44,12 +46,14 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-md);
+  min-height: 52px;
 }
 
 .pass-card-identity {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  flex: 1;
 }
 
 .pass-card-avatar {
@@ -76,6 +80,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
 }
 
 .pass-card-name-row {
@@ -136,34 +141,36 @@
   font-size: var(--font-size-sm);
 }
 
-.pass-card-destination-tag {
-  padding: 2px 8px;
-  border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
+.pass-rule-warning-note {
   font-family: var(--font-family-base);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+  color: var(--color-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
 }
 
 /* Timeline & Actions Bar */
 .pass-card-timeline-bar {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: var(--space-sm);
   background-color: rgba(32, 32, 31, 0.4);
   padding: 8px var(--space-sm);
   border-radius: var(--radius-sm);
   border: 1px solid rgba(43, 43, 43, 0.5);
+  min-height: 48px;
+  box-sizing: border-box;
 }
 
-@media (min-width: 640px) {
+@media (max-width: 640px) {
   .pass-card-timeline-bar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-xs);
   }
 }
 
@@ -290,14 +297,4 @@
 
 .pass-btn-inspector:hover {
   filter: brightness(1.2);
-}
-
-.pass-rule-warning-note {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-xs);
-  color: var(--color-tertiary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 2px;
 }

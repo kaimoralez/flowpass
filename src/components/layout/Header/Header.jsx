@@ -21,17 +21,8 @@ export default function Header({ onOpenNewPassModal }) {
             type="button"
             onClick={onOpenNewPassModal}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
-              add
-            </span>
             <span>+ Novo Pedido</span>
           </button>
-
-          <div className="stitch-user-avatar" title="Operador Logado">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
-              person
-            </span>
-          </div>
         </div>
       </div>
     </header>
