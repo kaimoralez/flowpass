@@ -3,9 +3,10 @@
 
 body {
   font-family: var(--font-family-base);
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
+  background-color: var(--color-surface-lowest);
+  color: var(--color-on-surface);
   font-size: var(--font-size-md);
+  line-height: 1.5;
   overflow-x: hidden;
 }
 
@@ -15,41 +16,25 @@ body {
   flex-direction: column;
 }
 
-/* Typography Hierarchy */
-h1 {
-  font-size: var(--font-size-h1);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-primary);
+/* Material Symbols alignment helper */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle;
 }
 
-h2 {
-  font-size: var(--font-size-h2);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-primary);
-}
-
-h3 {
-  font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-normal);
-  color: var(--color-text-primary);
-}
-
-p {
-  color: var(--color-text-secondary);
-  line-height: var(--line-height-relaxed);
-}
-
-/* Utility Layout Classes */
-.container {
+/* Container */
+.dashboard-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
-}
-
-.section-padding {
-  padding: var(--spacing-2xl) 0;
+  padding: 0 5%;
 }
