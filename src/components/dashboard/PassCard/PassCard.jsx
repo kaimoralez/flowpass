@@ -28,10 +28,10 @@ export default function PassCard({
   const isMale = student.gender === 'M';
   const genderTitle = isMale ? 'Aluno' : 'Aluna';
 
-  // Verificação do autor do pedido (Apenas quem criou pode negar saída)
+  // Verificação do autor do pedido (Apenas o professor criador do card pode autorizar, negar ou confirmar retorno)
   const loggedTeacher = session?.teacherName?.trim().toLowerCase();
   const passTeacher = student?.teacher?.trim().toLowerCase();
-  const isPassAuthor = !loggedTeacher || !passTeacher || loggedTeacher === passTeacher;
+  const isPassAuthor = Boolean(loggedTeacher && passTeacher && loggedTeacher === passTeacher);
 
   // Lógica de tempo e tolerância (15 min = 900s)
   const isOverdue = mode === 'active' && student.elapsedSeconds >= 900;
@@ -43,6 +43,8 @@ export default function PassCard({
   // Verificação de regra de liberação para a fila
   const releaseCheck =
     mode === 'queue' && canRelease ? canRelease(student) : { allowed: true };
+
+  const canApprove = isPassAuthor && releaseCheck.allowed;
 
   const stripeClass = isOverdue
     ? 'overdue'
@@ -61,7 +63,7 @@ export default function PassCard({
     : 'queue';
 
   const handleApproveClick = () => {
-    if (!releaseCheck.allowed) return;
+    if (!canApprove) return;
     setIsProcessing(true);
     setTimeout(() => {
       onApprove(student.id);
@@ -70,6 +72,7 @@ export default function PassCard({
   };
 
   const handleReturnClick = () => {
+    if (!isPassAuthor) return;
     setIsProcessing(true);
     setTimeout(() => {
       onConfirmReturn(student.id);
@@ -170,11 +173,13 @@ export default function PassCard({
             <>
               <button
                 type="button"
-                className={`pass-btn-primary ${!releaseCheck.allowed ? 'blocked' : ''}`}
-                disabled={!releaseCheck.allowed || isProcessing}
+                className={`pass-btn-primary ${!canApprove ? 'blocked' : ''}`}
+                disabled={!canApprove || isProcessing}
                 onClick={handleApproveClick}
                 title={
-                  !releaseCheck.allowed
+                  !isPassAuthor
+                    ? `Apenas ${student.teacher} pode liberar esta saída`
+                    : !releaseCheck.allowed
                     ? releaseCheck.reason
                     : 'Liberar saída do estudante'
                 }
@@ -206,8 +211,13 @@ export default function PassCard({
           ) : (
             <button
               type="button"
-              className="pass-btn-primary"
-              disabled={isProcessing}
+              className={`pass-btn-primary ${!isPassAuthor ? 'blocked' : ''}`}
+              disabled={!isPassAuthor || isProcessing}
+              title={
+                isPassAuthor
+                  ? 'Confirmar retorno do estudante à sala'
+                  : `Apenas ${student.teacher} pode confirmar o retorno`
+              }
               onClick={handleReturnClick}
             >
               <span>Confirmar Retorno</span>
