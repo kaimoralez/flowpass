@@ -13,6 +13,14 @@ import {
 const INITIAL_ACTIVE_STUDENTS = [];
 const INITIAL_QUEUE_STUDENTS = [];
 
+/**
+ * Calcula os segundos decorridos a partir de um timestamp real (Ms)
+ */
+function calcElapsed(timestampMs) {
+  if (!timestampMs) return 0;
+  return Math.max(0, Math.floor((Date.now() - timestampMs) / 1000));
+}
+
 export default function useSchoolFlow() {
   const [activeStudents, setActiveStudents] = useState(INITIAL_ACTIVE_STUDENTS);
   const [queueStudents, setQueueStudents] = useState(INITIAL_QUEUE_STUDENTS);
@@ -48,11 +56,19 @@ export default function useSchoolFlow() {
 
     // Inscrição dos ouvintes em tempo real
     const unsubscribeActive = subscribeToActiveStudents((students) => {
-      setActiveStudents(students);
+      const formatted = students.map((s) => ({
+        ...s,
+        elapsedSeconds: calcElapsed(s.exitTimestamp),
+      }));
+      setActiveStudents(formatted);
     });
 
     const unsubscribeQueue = subscribeToQueueStudents((students) => {
-      setQueueStudents(students);
+      const formatted = students.map((s) => ({
+        ...s,
+        waitSeconds: calcElapsed(s.requestTimestamp),
+      }));
+      setQueueStudents(formatted);
     });
 
     return () => {
@@ -61,21 +77,29 @@ export default function useSchoolFlow() {
     };
   }, []);
 
-  // Relógio em tempo real para os cronômetros locais
+  // Relógio em tempo real calculando o tempo decorrido a partir dos timestamps reais
   useEffect(() => {
     const timer = setInterval(() => {
+      const nowMs = Date.now();
+
       setActiveStudents((prev) =>
-        prev.map((student) => ({
-          ...student,
-          elapsedSeconds: (student.elapsedSeconds || 0) + 1,
-        }))
+        prev.map((student) => {
+          const startMs = student.exitTimestamp || nowMs;
+          return {
+            ...student,
+            elapsedSeconds: Math.max(0, Math.floor((nowMs - startMs) / 1000)),
+          };
+        })
       );
 
       setQueueStudents((prev) =>
-        prev.map((student) => ({
-          ...student,
-          waitSeconds: (student.waitSeconds || 0) + 1,
-        }))
+        prev.map((student) => {
+          const startMs = student.requestTimestamp || nowMs;
+          return {
+            ...student,
+            waitSeconds: Math.max(0, Math.floor((nowMs - startMs) / 1000)),
+          };
+        })
       );
     }, 1000);
 
@@ -127,11 +151,13 @@ export default function useSchoolFlow() {
           hour: '2-digit',
           minute: '2-digit',
         });
+        const nowMs = Date.now();
 
         const newActive = {
           ...student,
-          id: `act-${Date.now()}`,
+          id: `act-${nowMs}`,
           exitTime: exitTimeStr,
+          exitTimestamp: nowMs,
           elapsedSeconds: 0,
         };
 
@@ -177,9 +203,10 @@ export default function useSchoolFlow() {
         hour: '2-digit',
         minute: '2-digit',
       });
+      const nowMs = Date.now();
 
       const newPass = {
-        id: `q-${Date.now()}`,
+        id: `q-${nowMs}`,
         gender: passData.gender,
         grade: passData.grade,
         classGroup: passData.classGroup || `${passData.grade}`,
@@ -189,6 +216,7 @@ export default function useSchoolFlow() {
         destinationLabel: passData.destinationLabel,
         color: passData.color,
         requestTime: requestTimeStr,
+        requestTimestamp: nowMs,
         waitSeconds: 0,
         isPriority: Boolean(passData.isPriority),
         note: passData.note || '',

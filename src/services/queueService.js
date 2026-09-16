@@ -29,10 +29,18 @@ export function subscribeToActiveStudents(onUpdate, onError) {
   return onSnapshot(
     q,
     (snapshot) => {
-      const students = snapshot.docs.map((d) => ({
-        id: d.id,
-        ...d.data(),
-      }));
+      const students = snapshot.docs.map((d) => {
+        const data = d.data();
+        const createdMs = data.createdAt?.toMillis
+          ? data.createdAt.toMillis()
+          : data.exitTimestamp || Date.now();
+
+        return {
+          id: d.id,
+          ...data,
+          exitTimestamp: data.exitTimestamp || createdMs,
+        };
+      });
       onUpdate(students);
     },
     (err) => {
@@ -56,10 +64,18 @@ export function subscribeToQueueStudents(onUpdate, onError) {
   return onSnapshot(
     q,
     (snapshot) => {
-      const students = snapshot.docs.map((d) => ({
-        id: d.id,
-        ...d.data(),
-      }));
+      const students = snapshot.docs.map((d) => {
+        const data = d.data();
+        const createdMs = data.createdAt?.toMillis
+          ? data.createdAt.toMillis()
+          : data.requestTimestamp || Date.now();
+
+        return {
+          id: d.id,
+          ...data,
+          requestTimestamp: data.requestTimestamp || createdMs,
+        };
+      });
       onUpdate(students);
     },
     (err) => {
@@ -91,10 +107,10 @@ export async function createQueuePass(passData) {
     destinationLabel: passData.destinationLabel,
     color: passData.color,
     requestTime: requestTimeStr,
-    waitSeconds: 0,
+    requestTimestamp: Date.now(),
     isPriority: Boolean(passData.isPriority),
     note: passData.note || '',
-    dateString: now.toISOString().split('T')[0], // YYYY-MM-DD para controle diário
+    dateString: now.toISOString().split('T')[0],
     createdAt: serverTimestamp(),
   };
 
@@ -125,7 +141,7 @@ export async function approveStudentExit(student) {
     destinationLabel: student.destinationLabel,
     color: student.color,
     exitTime: exitTimeStr,
-    elapsedSeconds: 0,
+    exitTimestamp: Date.now(),
     isPriority: student.isPriority || false,
     dateString: now.toISOString().split('T')[0],
     createdAt: serverTimestamp(),
