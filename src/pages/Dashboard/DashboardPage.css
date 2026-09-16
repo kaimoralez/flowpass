@@ -14,19 +14,11 @@
   gap: var(--space-xl);
 }
 
-/* SubHeader & Filters */
+/* SubHeader */
 .dashboard-subheader {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-@media (min-width: 900px) {
-  .dashboard-subheader {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
+  align-items: center;
+  justify-content: space-between;
 }
 
 .dashboard-page-title {
@@ -35,6 +27,15 @@
   font-weight: var(--font-weight-semibold);
   letter-spacing: -0.015em;
   color: var(--color-on-surface);
+}
+
+/* Filter Section Centralized Above Columns */
+.dashboard-filter-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 4px;
 }
 
 /* Metric Tiles Grid */

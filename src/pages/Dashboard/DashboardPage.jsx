@@ -48,16 +48,11 @@ export default function DashboardPage() {
 
       {/* Conteúdo Principal do Dashboard */}
       <main className="dashboard-main-content dashboard-container">
-        {/* Subheader: Título e Filtro de Turma do Ensino Médio */}
+        {/* Subheader: Título do Painel */}
         <div className="dashboard-subheader">
           <h1 className="dashboard-page-title">
             Painel de Circulação em Tempo Real
           </h1>
-
-          <GradeFilter
-            selectedGrade={selectedGrade}
-            onSelectGrade={setSelectedGrade}
-          />
         </div>
 
         {/* Régua de Métricas Rápidas (MetricTiles) */}
@@ -92,6 +87,14 @@ export default function DashboardPage() {
             unit="excedido (>15m)"
             icon="notification_important"
             colorScheme="error"
+          />
+        </div>
+
+        {/* Filtro de Séries do Ensino Médio (Centralizado Acima das Colunas) */}
+        <div className="dashboard-filter-section">
+          <GradeFilter
+            selectedGrade={selectedGrade}
+            onSelectGrade={setSelectedGrade}
           />
         </div>
 
