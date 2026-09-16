@@ -89,9 +89,7 @@ export default function NewPassModal({ isOpen, onClose, onCreatePass, canRelease
         <div className="modal-header">
           <div>
             <div className="modal-title-row">
-              <span className="modal-title-dot"></span>
               <h2 className="modal-title">Novo Pedido de Saída</h2>
-              <span className="modal-fast-pass-tag">Pass Rápido</span>
             </div>
             <p className="modal-subtitle">
               Registro Rápido em Sala • Colégio Adventista Asa Sul
@@ -113,15 +111,13 @@ export default function NewPassModal({ isOpen, onClose, onCreatePass, canRelease
         {/* Modal Body Form */}
         <form className="modal-form-body" onSubmit={handleSubmit}>
           {/* Campo 1: Seletor Aluno / Aluna & Série */}
-          <div className="modal-student-type-row">
-            <div>
-              <label className="access-label">
-                <span className="material-symbols-outlined access-label-icon">
-                  group
-                </span>
-                Identificação do Estudante
-              </label>
-            </div>
+          <div className="access-form-group">
+            <label className="access-label">
+              <span className="material-symbols-outlined access-label-icon">
+                group
+              </span>
+              Identificação do Estudante
+            </label>
 
             <div className="modal-gender-switcher">
               <button
@@ -207,34 +203,16 @@ export default function NewPassModal({ isOpen, onClose, onCreatePass, canRelease
 
           {/* Campo 5: Toggle de Prioridade */}
           <div className="modal-priority-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--color-surface-high)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--color-primary)',
-                }}
-              >
+            <div className="modal-priority-left">
+              <div className="modal-priority-icon-box">
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                   flag
                 </span>
               </div>
-              <div>
-                <div style={{ fontWeight: '600', fontSize: '13px' }}>
-                  Saída Prioritária / Atendimento Especial
-                </div>
-                <div
-                  style={{
-                    fontSize: '11px',
-                    color: 'var(--color-on-surface-variant)',
-                  }}
-                >
-                  Posiciona a requisição no topo imediato da fila de espera
+              <div className="modal-priority-info">
+                <div className="modal-priority-title">Saída Prioritária</div>
+                <div className="modal-priority-sub">
+                  Atendimento especial no topo da fila
                 </div>
               </div>
             </div>
@@ -298,10 +276,7 @@ export default function NewPassModal({ isOpen, onClose, onCreatePass, canRelease
               Cancelar
             </button>
             <button type="submit" className="modal-btn-confirm">
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                add_task
-              </span>
-              <span>Confirmar e Adicionar à Fila</span>
+              <span>Confirmar Pedido</span>
             </button>
           </div>
         </form>

@@ -173,9 +173,6 @@ export default function PassCard({
                     : 'Liberar saída do estudante'
                 }
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                  check_circle
-                </span>
                 <span>
                   {!releaseCheck.allowed ? 'Vaga Ocupada' : 'Liberar Saída'}
                 </span>
@@ -193,33 +190,14 @@ export default function PassCard({
               </button>
             </>
           ) : (
-            <>
-              <button
-                type="button"
-                className="pass-btn-primary"
-                disabled={isProcessing}
-                onClick={handleReturnClick}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                  login
-                </span>
-                <span>Confirmar Retorno</span>
-              </button>
-
-              {isOverdue && (
-                <button
-                  type="button"
-                  className="pass-btn-inspector"
-                  title="Acionar Inspetor / Ronda no Corredor"
-                  onClick={() => onNotifyInspector(student)}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                    security
-                  </span>
-                  <span>Inspetor</span>
-                </button>
-              )}
-            </>
+            <button
+              type="button"
+              className="pass-btn-primary"
+              disabled={isProcessing}
+              onClick={handleReturnClick}
+            >
+              <span>Confirmar Retorno</span>
+            </button>
           )}
         </div>
       </div>

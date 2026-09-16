@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSession } from '../../context/SessionContext.jsx';
+import Footer from '../../components/layout/Footer/Footer.jsx';
 import './AccessPage.css';
 
 /**
@@ -31,29 +32,28 @@ export default function AccessPage() {
       <div className="access-ambient-glow-top"></div>
       <div className="access-ambient-glow-bottom"></div>
 
-      <div className="access-container">
-        <div className="access-header-text">
-          <h1 className="access-title">
-            Bem-vindo(a) ao <span className="access-title-accent">FLOWPASS</span>
-          </h1>
-          <p className="access-subtitle">
-            Autenticação e Registro da Sala de Prova
-          </p>
-        </div>
-
-        <div className="access-card">
-          <div className="access-card-header">
-            <h2 className="access-card-title">Dados da Operação de Prova</h2>
+      <main className="access-main-content">
+        <div className="access-container">
+          <div className="access-header-text">
+            <h1 className="access-title">
+              Bem-vindo(a) ao <span className="access-title-accent">FLOWPASS</span>
+            </h1>
+            <p className="access-subtitle">
+              Autenticação e Registro da Sala de Prova
+            </p>
           </div>
 
-          <form className="access-form" onSubmit={handleSubmit}>
-            <div className="access-form-group">
-              <label className="access-label" htmlFor="prof-name">
-                <span className="material-symbols-outlined access-label-icon">badge</span>
-                Nome Completo do(a) Professor(a)
-              </label>
-              <div className="access-input-wrapper">
-                <span className="material-symbols-outlined access-input-icon">person_outline</span>
+          <div className="access-card">
+            <div className="access-card-header">
+              <h2 className="access-card-title">Dados da Operação de Prova</h2>
+            </div>
+
+            <form className="access-form" onSubmit={handleSubmit}>
+              <div className="access-form-group">
+                <label className="access-label" htmlFor="prof-name">
+                  <span className="material-symbols-outlined access-label-icon">badge</span>
+                  Nome Completo do(a) Professor(a)
+                </label>
                 <input
                   id="prof-name"
                   type="text"
@@ -64,15 +64,12 @@ export default function AccessPage() {
                   required
                 />
               </div>
-            </div>
 
-            <div className="access-form-group">
-              <label className="access-label" htmlFor="prof-room">
-                <span className="material-symbols-outlined access-label-icon">meeting_room</span>
-                Sala de Aplicação da Prova
-              </label>
-              <div className="access-input-wrapper">
-                <span className="material-symbols-outlined access-input-icon">door_front</span>
+              <div className="access-form-group">
+                <label className="access-label" htmlFor="prof-room">
+                  <span className="material-symbols-outlined access-label-icon">meeting_room</span>
+                  Sala de Aplicação da Prova
+                </label>
                 <input
                   id="prof-room"
                   type="text"
@@ -83,37 +80,39 @@ export default function AccessPage() {
                   required
                 />
               </div>
-            </div>
 
-            <div className="access-sync-notice">
-              <div className="access-sync-icon-box">
-                <span className="material-symbols-outlined access-sync-icon">sync</span>
+              <div className="access-sync-notice">
+                <div className="access-sync-icon-box">
+                  <span className="material-symbols-outlined access-sync-icon">sync</span>
+                </div>
+                <p className="access-sync-text">
+                  Ao confirmar, todos os cartões de circulação e chamados de saída serão sincronizados automaticamente com o seu perfil e esta sala.
+                </p>
               </div>
-              <p className="access-sync-text">
-                Ao confirmar, todos os cartões de circulação e chamados de saída serão sincronizados automaticamente com o seu perfil e esta sala.
-              </p>
-            </div>
 
-            <button
-              type="submit"
-              className="access-submit-btn"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="access-btn-spinner"></span>
-                  <span>Sincronizando Matriz da Sala...</span>
-                </>
-              ) : (
-                <>
-                  <span>Entrar e Iniciar Painel de Prova</span>
-                  <span className="material-symbols-outlined">arrow_forward</span>
-                </>
-              )}
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="access-submit-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="access-btn-spinner"></span>
+                    <span>Sincronizando Matriz da Sala...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Entrar e Iniciar Painel de Prova</span>
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

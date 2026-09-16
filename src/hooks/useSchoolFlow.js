@@ -1,127 +1,17 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { isFirebaseConfigured } from '../services/firebase';
+import {
+  subscribeToActiveStudents,
+  subscribeToQueueStudents,
+  createQueuePass,
+  approveStudentExit,
+  rejectStudentExit,
+  confirmStudentReturn,
+  clearAllPasses,
+} from '../services/queueService';
 
-// Dados iniciais baseados nas telas do Stitch adaptados para a regra Aluno/Aluna do Ensino Médio
-const INITIAL_ACTIVE_STUDENTS = [
-  {
-    id: 'act-1',
-    gender: 'M', // Aluno
-    grade: '3º EM',
-    classGroup: '3º EM B',
-    room: 'Sala 205',
-    teacher: 'Prof. Carlos Eduardo',
-    destination: 'banheiro',
-    destinationLabel: 'Banheiro',
-    color: '#00B4D8',
-    exitTime: '10:32',
-    elapsedSeconds: 860, // 14:20 min
-    isPriority: false,
-  },
-  {
-    id: 'act-2',
-    gender: 'M', // Aluno
-    grade: '1º EM',
-    classGroup: '1º EM A',
-    room: 'Sala 101',
-    teacher: 'Profa. Fernanda Souza',
-    destination: 'coordenacao',
-    destinationLabel: 'Coordenação',
-    color: '#F37900',
-    exitTime: '10:28',
-    elapsedSeconds: 1120, // 18:40 min (>15min -> tempo excedido)
-    isPriority: false,
-  },
-  {
-    id: 'act-3',
-    gender: 'F', // Aluna
-    grade: '2º EM',
-    classGroup: '2º EM C',
-    room: 'Sala 203',
-    teacher: 'Prof. Marcos Silva',
-    destination: 'bebedouro',
-    destinationLabel: 'Bebedouro',
-    color: '#2563EB',
-    exitTime: '10:40',
-    elapsedSeconds: 375, // 06:15 min
-    isPriority: false,
-  },
-  {
-    id: 'act-4',
-    gender: 'F', // Aluna
-    grade: '2º EM',
-    classGroup: '2º EM B',
-    room: 'Sala 202',
-    teacher: 'Profa. Helena Ramos',
-    destination: 'biblioteca',
-    destinationLabel: 'Biblioteca',
-    color: '#B53EA9',
-    exitTime: '10:38',
-    elapsedSeconds: 510, // 08:30 min
-    isPriority: false,
-  },
-];
-
-const INITIAL_QUEUE_STUDENTS = [
-  {
-    id: 'q-1',
-    gender: 'M', // Aluno
-    grade: '3º EM',
-    classGroup: '3º EM A',
-    room: 'Sala 204',
-    teacher: 'Prof. Carlos Eduardo',
-    destination: 'banheiro',
-    destinationLabel: 'Banheiro',
-    color: '#00B4D8',
-    requestTime: '10:42',
-    waitSeconds: 240, // 4 min
-    isPriority: false,
-    note: '',
-  },
-  {
-    id: 'q-2',
-    gender: 'F', // Aluna
-    grade: '1º EM',
-    classGroup: '1º EM B',
-    room: 'Sala 102',
-    teacher: 'Profa. Helena Ramos',
-    destination: 'coordenacao',
-    destinationLabel: 'Coordenação',
-    color: '#F37900',
-    requestTime: '10:44',
-    waitSeconds: 135, // 2:15 min
-    isPriority: false,
-    note: '',
-  },
-  {
-    id: 'q-3',
-    gender: 'M', // Aluno
-    grade: '2º EM',
-    classGroup: '2º EM A',
-    room: 'Sala 201',
-    teacher: 'Prof. Ricardo Mendes',
-    destination: 'bebedouro',
-    destinationLabel: 'Bebedouro',
-    color: '#2563EB',
-    requestTime: '10:45',
-    waitSeconds: 70, // 1:10 min
-    isPriority: false,
-    note: '',
-  },
-  {
-    id: 'q-4',
-    gender: 'F', // Aluna
-    grade: '3º EM',
-    classGroup: '3º EM C',
-    room: 'Sala 206',
-    teacher: 'Profa. Mariana Lima',
-    destination: 'enfermaria',
-    destinationLabel: 'Enfermaria',
-    color: '#FF0000',
-    requestTime: '10:46',
-    waitSeconds: 30, // 30 seg
-    isPriority: true,
-    note: 'Urgência Médica',
-  },
-];
+const INITIAL_ACTIVE_STUDENTS = [];
+const INITIAL_QUEUE_STUDENTS = [];
 
 export default function useSchoolFlow() {
   const [activeStudents, setActiveStudents] = useState(INITIAL_ACTIVE_STUDENTS);
@@ -129,20 +19,62 @@ export default function useSchoolFlow() {
   const [selectedGrade, setSelectedGrade] = useState('all'); // 'all', '1º EM', '2º EM', '3º EM'
   const [inspectorAlert, setInspectorAlert] = useState(null);
 
-  // Relógio em tempo real para os cronômetros
+  // Efeito de verificação do reset diário às 00h
+  useEffect(() => {
+    const checkDailyReset = () => {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const lastReset = localStorage.getItem('flowpass_last_reset');
+
+      if (lastReset && lastReset !== todayStr) {
+        console.log('[FlowPass] Mudança de dia detectada (00h). Zerando lista de passes...');
+        if (isFirebaseConfigured) {
+          clearAllPasses();
+        } else {
+          setActiveStudents([]);
+          setQueueStudents([]);
+        }
+      }
+      localStorage.setItem('flowpass_last_reset', todayStr);
+    };
+
+    checkDailyReset();
+    const resetInterval = setInterval(checkDailyReset, 60000); // Checa a cada minuto se deu meia-noite
+    return () => clearInterval(resetInterval);
+  }, []);
+
+  // Efeito de conexão e sincronização com o Firebase Firestore
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+
+    // Inscrição dos ouvintes em tempo real
+    const unsubscribeActive = subscribeToActiveStudents((students) => {
+      setActiveStudents(students);
+    });
+
+    const unsubscribeQueue = subscribeToQueueStudents((students) => {
+      setQueueStudents(students);
+    });
+
+    return () => {
+      unsubscribeActive();
+      unsubscribeQueue();
+    };
+  }, []);
+
+  // Relógio em tempo real para os cronômetros locais
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveStudents((prev) =>
         prev.map((student) => ({
           ...student,
-          elapsedSeconds: student.elapsedSeconds + 1,
+          elapsedSeconds: (student.elapsedSeconds || 0) + 1,
         }))
       );
 
       setQueueStudents((prev) =>
         prev.map((student) => ({
           ...student,
-          waitSeconds: student.waitSeconds + 1,
+          waitSeconds: (student.waitSeconds || 0) + 1,
         }))
       );
     }, 1000);
@@ -177,7 +109,7 @@ export default function useSchoolFlow() {
    * Libera a saída de um aluno da fila para a lista de ativos
    */
   const approveExit = useCallback(
-    (id) => {
+    async (id) => {
       const student = queueStudents.find((s) => s.id === id);
       if (!student) return false;
 
@@ -187,21 +119,25 @@ export default function useSchoolFlow() {
         return false;
       }
 
-      const now = new Date();
-      const exitTimeStr = now.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      if (isFirebaseConfigured) {
+        await approveStudentExit(student);
+      } else {
+        const now = new Date();
+        const exitTimeStr = now.toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        });
 
-      const newActive = {
-        ...student,
-        id: `act-${Date.now()}`,
-        exitTime: exitTimeStr,
-        elapsedSeconds: 0,
-      };
+        const newActive = {
+          ...student,
+          id: `act-${Date.now()}`,
+          exitTime: exitTimeStr,
+          elapsedSeconds: 0,
+        };
 
-      setQueueStudents((prev) => prev.filter((s) => s.id !== id));
-      setActiveStudents((prev) => [newActive, ...prev]);
+        setQueueStudents((prev) => prev.filter((s) => s.id !== id));
+        setActiveStudents((prev) => [newActive, ...prev]);
+      }
       return true;
     },
     [queueStudents, canReleaseStudent]
@@ -210,22 +146,32 @@ export default function useSchoolFlow() {
   /**
    * Nega ou cancela uma solicitação na fila
    */
-  const rejectExit = useCallback((id) => {
-    setQueueStudents((prev) => prev.filter((s) => s.id !== id));
+  const rejectExit = useCallback(async (id) => {
+    if (isFirebaseConfigured) {
+      await rejectStudentExit(id);
+    } else {
+      setQueueStudents((prev) => prev.filter((s) => s.id !== id));
+    }
   }, []);
 
   /**
    * Confirma o retorno de um aluno, liberando a vaga de circulação da sua série e gênero
    */
-  const confirmReturn = useCallback((id) => {
-    setActiveStudents((prev) => prev.filter((s) => s.id !== id));
+  const confirmReturn = useCallback(async (id) => {
+    if (isFirebaseConfigured) {
+      await confirmStudentReturn(id);
+    } else {
+      setActiveStudents((prev) => prev.filter((s) => s.id !== id));
+    }
   }, []);
 
   /**
    * Cria um novo pedido de saída
    */
-  const createPass = useCallback(
-    (passData) => {
+  const createPass = useCallback(async (passData) => {
+    if (isFirebaseConfigured) {
+      await createQueuePass(passData);
+    } else {
       const now = new Date();
       const requestTimeStr = now.toLocaleTimeString('pt-BR', {
         hour: '2-digit',
@@ -234,8 +180,8 @@ export default function useSchoolFlow() {
 
       const newPass = {
         id: `q-${Date.now()}`,
-        gender: passData.gender, // 'M' ou 'F'
-        grade: passData.grade, // '1º EM', '2º EM', '3º EM'
+        gender: passData.gender,
+        grade: passData.grade,
         classGroup: passData.classGroup || `${passData.grade}`,
         room: passData.room,
         teacher: passData.teacher,
@@ -253,9 +199,8 @@ export default function useSchoolFlow() {
       } else {
         setQueueStudents((prev) => [...prev, newPass]);
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   /**
    * Aciona alerta de ronda / inspetor
@@ -264,6 +209,18 @@ export default function useSchoolFlow() {
     const genderLabel = student.gender === 'M' ? 'Aluno' : 'Aluna';
     setInspectorAlert(`Inspetor acionado para ${genderLabel} da ${student.room} (${student.grade})!`);
     setTimeout(() => setInspectorAlert(null), 4000);
+  }, []);
+
+  /**
+   * Reseta/zera manualmente todos os passes
+   */
+  const handleClearAll = useCallback(async () => {
+    if (isFirebaseConfigured) {
+      await clearAllPasses();
+    } else {
+      setActiveStudents([]);
+      setQueueStudents([]);
+    }
   }, []);
 
   // Alunos filtrados pela série selecionada
@@ -282,9 +239,8 @@ export default function useSchoolFlow() {
     const totalActive = activeStudents.length;
     const totalQueue = queueStudents.length;
 
-    // Tempo médio em minutos
     const totalSeconds = activeStudents.reduce(
-      (acc, curr) => acc + curr.elapsedSeconds,
+      (acc, curr) => acc + (curr.elapsedSeconds || 0),
       0
     );
     const avgMinutes = totalActive > 0 ? Math.floor(totalSeconds / totalActive / 60) : 0;
@@ -294,9 +250,8 @@ export default function useSchoolFlow() {
       avgSecondsRemainder
     ).padStart(2, '0')}`;
 
-    // Alertas (> 15 min = 900 segundos)
     const overdueCount = activeStudents.filter(
-      (s) => s.elapsedSeconds >= 900
+      (s) => (s.elapsedSeconds || 0) >= 900
     ).length;
 
     return {
@@ -320,7 +275,9 @@ export default function useSchoolFlow() {
     rejectExit,
     confirmReturn,
     createPass,
+    clearAllPasses: handleClearAll,
     notifyInspector,
     inspectorAlert,
+    isFirebaseConnected: isFirebaseConfigured,
   };
 }

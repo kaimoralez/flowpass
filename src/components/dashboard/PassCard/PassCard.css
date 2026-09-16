@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 146px;
+  min-height: 140px;
   box-sizing: border-box;
   overflow: hidden;
   transition: all var(--transition-normal);
@@ -45,20 +45,21 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-md);
-  min-height: 52px;
+  gap: var(--space-sm);
+  min-height: 48px;
 }
 
 .pass-card-identity {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   flex: 1;
+  min-width: 0;
 }
 
 .pass-card-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
   background-color: var(--color-surface-high);
   display: flex;
@@ -81,6 +82,7 @@
   flex-direction: column;
   gap: 2px;
   flex: 1;
+  min-width: 0;
 }
 
 .pass-card-name-row {
@@ -121,16 +123,25 @@
 .pass-card-meta {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 6px;
   color: var(--color-on-surface-variant);
   font-family: var(--font-family-base);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
   flex-wrap: wrap;
 }
 
+.pass-card-meta > span {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.4;
+}
+
 .pass-card-room-code {
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-surface-variant);
 }
 
 .pass-card-teacher {
@@ -138,7 +149,8 @@
   align-items: center;
   gap: 3px;
   color: var(--color-secondary);
-  font-size: var(--font-size-sm);
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .pass-rule-warning-note {
@@ -157,39 +169,37 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   background-color: rgba(32, 32, 31, 0.4);
   padding: 8px var(--space-sm);
   border-radius: var(--radius-sm);
   border: 1px solid rgba(43, 43, 43, 0.5);
-  min-height: 48px;
+  min-height: 52px;
   box-sizing: border-box;
+  margin-top: 8px;
+  width: 100%;
 }
 
-@media (max-width: 640px) {
-  .pass-card-timeline-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--space-xs);
-  }
-}
-
+/* Timer Block: Alinhamento Milimétrico das duas linhas */
 .pass-card-timer-block {
   display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  flex-shrink: 0;
 }
 
 .pass-timer-pill {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 4px;
   padding: 2px 8px;
   border-radius: var(--radius-xs);
   font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
+  white-space: nowrap;
 }
 
 .pass-timer-pill.normal {
@@ -212,43 +222,48 @@
   color: var(--color-error);
 }
 
+/* Alinhamento milimétrico exato com o texto do cronômetro */
 .pass-card-time-label {
   color: var(--color-on-surface-variant);
-  font-size: var(--font-size-xs);
+  font-size: 11px;
   font-family: var(--font-family-base);
+  padding-left: 8px; /* Alinha perfeitamente a 8px do bordo, exatamente sob o texto do cronômetro */
+  white-space: nowrap;
 }
 
-/* Action Buttons */
+/* Action Buttons: Direita */
 .pass-card-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .pass-btn-primary {
   height: 36px;
-  padding: 0 var(--space-md);
+  padding: 0 14px;
   border-radius: var(--radius-md);
   background-color: var(--color-primary-container);
   color: var(--color-on-primary);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-md);
+  font-size: 13px;
   border: none;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
+  justify-content: center;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: transform 0.15s ease, background-color 0.15s ease;
   white-space: nowrap;
 }
 
 .pass-btn-primary:hover:not(:disabled) {
-  filter: brightness(1.15);
+  transform: scale(1.02);
 }
 
 .pass-btn-primary:active:not(:disabled) {
-  filter: brightness(0.95);
+  transform: scale(0.97);
 }
 
 .pass-btn-primary.blocked {
@@ -259,8 +274,8 @@
 }
 
 .pass-btn-icon-danger {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-md);
   background-color: var(--color-surface);
   color: var(--color-on-surface-variant);
@@ -269,32 +284,56 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
 }
 
 .pass-btn-icon-danger:hover {
   background-color: var(--color-error-container);
   color: var(--color-error);
   border-color: var(--color-error);
+  transform: scale(1.04);
 }
 
-.pass-btn-inspector {
-  height: 36px;
-  padding: 0 var(--space-sm);
-  border-radius: var(--radius-md);
-  background-color: var(--color-error-container);
-  color: var(--color-error);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  cursor: pointer;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  transition: all var(--transition-fast);
+/* Ajuste Otimizado para Telas Pequenas e Celulares (360px - 480px) */
+@media (max-width: 480px) {
+  .pass-card {
+    padding: 10px 12px;
+  }
+
+  .pass-card-timeline-bar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .pass-btn-primary {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .pass-btn-icon-danger {
+    width: 32px;
+    height: 32px;
+  }
+
+  .pass-timer-pill {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  .pass-card-time-label {
+    padding-left: 6px;
+    font-size: 10px;
+  }
 }
 
-.pass-btn-inspector:hover {
-  filter: brightness(1.2);
+@media (max-width: 360px) {
+  .pass-card-meta {
+    font-size: 11px;
+  }
+  .pass-btn-primary {
+    padding: 0 8px;
+    font-size: 11px;
+  }
 }

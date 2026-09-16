@@ -1,12 +1,21 @@
 .access-page-wrapper {
   position: relative;
-  min-height: calc(100vh - 80px);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: var(--color-background);
+}
+
+.access-main-content {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-xl) var(--space-md);
-  overflow: hidden;
-  background-color: var(--color-background);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .access-ambient-glow-top {
@@ -134,10 +143,11 @@
   color: var(--color-on-surface);
   font-family: var(--font-family-base);
   font-size: var(--font-size-md);
-  padding: 0 var(--space-md) 0 44px;
+  padding: 0 var(--space-md);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   transition: all var(--transition-fast);
+  box-sizing: border-box;
 }
 
 .access-input::placeholder {
