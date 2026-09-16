@@ -28,10 +28,17 @@
   letter-spacing: 0.01em;
 }
 
+.stitch-footer-credits-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
 .stitch-footer-credit {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 6px;
   color: var(--color-on-surface-variant);
   font-family: var(--font-family-base);
   font-size: var(--font-size-sm);
@@ -43,8 +50,17 @@
   color: var(--color-primary);
 }
 
+.stitch-social-icon,
 .stitch-github-icon {
   width: 18px;
   height: 18px;
   fill: currentColor;
+  flex-shrink: 0;
 }
+
+.stitch-footer-divider {
+  color: var(--color-border);
+  font-size: var(--font-size-xs);
+  user-select: none;
+}
+
