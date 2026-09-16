@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSession } from '../../../context/SessionContext.jsx';
 import './PassCard.css';
 
 /**
@@ -19,13 +20,18 @@ export default function PassCard({
   onApprove,
   onReject,
   onConfirmReturn,
-  onNotifyInspector,
   canRelease,
 }) {
+  const { session } = useSession();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const isMale = student.gender === 'M';
   const genderTitle = isMale ? 'Aluno' : 'Aluna';
+
+  // Verificação do autor do pedido (Apenas quem criou pode negar saída)
+  const loggedTeacher = session?.teacherName?.trim().toLowerCase();
+  const passTeacher = student?.teacher?.trim().toLowerCase();
+  const isPassAuthor = !loggedTeacher || !passTeacher || loggedTeacher === passTeacher;
 
   // Lógica de tempo e tolerância (15 min = 900s)
   const isOverdue = mode === 'active' && student.elapsedSeconds >= 900;
@@ -180,9 +186,17 @@ export default function PassCard({
 
               <button
                 type="button"
-                className="pass-btn-icon-danger"
-                title="Negar Saída"
-                onClick={() => onReject(student.id)}
+                className={`pass-btn-icon-danger ${!isPassAuthor ? 'disabled' : ''}`}
+                disabled={!isPassAuthor || isProcessing}
+                title={
+                  isPassAuthor
+                    ? 'Negar Saída'
+                    : `Apenas ${student.teacher} pode negar este pedido`
+                }
+                onClick={() => {
+                  if (!isPassAuthor) return;
+                  onReject(student.id);
+                }}
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                   close

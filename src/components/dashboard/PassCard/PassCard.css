@@ -288,11 +288,23 @@
   flex-shrink: 0;
 }
 
-.pass-btn-icon-danger:hover {
+.pass-btn-icon-danger:hover:not(.disabled) {
   background-color: var(--color-error-container);
   color: var(--color-error);
   border-color: var(--color-error);
   transform: scale(1.04);
+}
+
+.pass-btn-icon-danger.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.pass-btn-icon-danger.disabled:hover {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface-variant);
+  transform: none;
 }
 
 /* Ajuste Otimizado para Telas Pequenas e Celulares (360px - 480px) */
